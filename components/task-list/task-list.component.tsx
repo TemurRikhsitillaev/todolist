@@ -1,9 +1,10 @@
-import React, { Fragment } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 
 import TasksListStore from "@/store/tasks-list/tasks-list.store";
 import { TASK_STATUS } from "@/store/tasks-list/tasks-status.store";
 
+// IMAGES
 import deleteIcon from "@/assets/delete-icon.svg";
 import tickIcon from "@/assets/tick-icon.svg";
 
@@ -15,20 +16,58 @@ type TaskTypes = {
 };
 
 const TaskList = ({ id, title, createdAt, status }: TaskTypes) => {
+  const taskDragRefStart = useRef("");
+  const taskDragOverRef = useRef("");
+
   const handleDeleteTask = (id: string) => {
-    TasksListStore.deleteTask(id);
+    return TasksListStore.deleteTask(id);
   };
 
   const handleCompleteTask = (id: string) => {
-    TasksListStore.completeTask(id);
+    return TasksListStore.completeTask(id);
+  };
+
+  const handleUnCompleteTask = (id: string) => {
+    return TasksListStore.unCompleteTask(id);
+  };
+
+  const handleCompleteUnCompleteTask = (id: string, status: string) => {
+    if (status === TASK_STATUS.INPROGRESS) {
+      return handleCompleteTask(id);
+    } else if (status === TASK_STATUS.DONE) {
+      return handleUnCompleteTask(id);
+    }
+  };
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    taskDragRefStart.current = id;
+    console.log("start", id);
+    return e;
+  };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    taskDragOverRef.current = id;
+    console.log("enter", id);
+    return e;
+  };
+
+  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    console.log("end: ", id);
+    return e;
   };
 
   return (
-    <section className="flex items-start text-white mb-8" key={id}>
+    <div
+      className={"flex items-start text-white mb-8"}
+      draggable
+      onDragStart={(e) => handleDragStart(e, id)}
+      onDragEnter={(e) => handleDragEnter(e, id)}
+      onDragEnd={(e) => handleDragEnd(e, id)}
+    >
       <button
         type="button"
-        className="w-8 h-8 rounded-full bg-gray-900 mr-5 flex justify-center items-center mt-4"
-        onClick={() => handleCompleteTask(id)}
+        className="p-2 rounded-full bg-gray-900 mr-5 flex justify-center items-center mt-4"
+        onClick={() => handleCompleteUnCompleteTask(id, status)}
       >
         {status === TASK_STATUS.INPROGRESS && (
           <span className="block w-5 h-5 bg-gray-800 rounded-full"></span>
@@ -56,7 +95,7 @@ const TaskList = ({ id, title, createdAt, status }: TaskTypes) => {
       >
         <Image src={deleteIcon} alt="delete" className="w-6 h-6" />
       </button>
-    </section>
+    </div>
   );
 };
 

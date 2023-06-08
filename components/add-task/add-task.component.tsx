@@ -34,7 +34,7 @@ const AddTask = () => {
   };
 
   return (
-    <footer className="flex items-center gap-10 w-full h-max-content px-10 mt-10">
+    <footer className="flex items-center gap-10 w-full h-20 px-10 mt-10 fixed bottom-0 bg-gray-950 shadow-2xl shadow-white ">
       <input
         type="text"
         placeholder="Add a task"

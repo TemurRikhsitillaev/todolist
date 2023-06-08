@@ -44,6 +44,15 @@ class TasksListStore {
       return task;
     });
   };
+
+  unCompleteTask = (id) => {
+    this.tasksList = this.tasksList.map((task) => {
+      if (task.id === id) {
+        task.status = TASK_STATUS.INPROGRESS;
+      }
+      return task;
+    });
+  };
 }
 
 export default new TasksListStore();
