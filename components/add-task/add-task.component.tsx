@@ -12,9 +12,11 @@ const AddTask = () => {
   };
 
   const handleAddTask = () => {
+    if (!title) return;
+
     const createdAt =
       new Date().toLocaleTimeString().slice(0, 4) +
-      new Date().toLocaleTimeString().slice(7, 10);
+      new Date().toLocaleTimeString().slice(7, 11);
     const id = nanoid();
     const status = TASK_STATUS.INPROGRESS;
 
