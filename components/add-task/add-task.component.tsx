@@ -25,6 +25,7 @@ const AddTask = () => {
       title: title,
       createdAt: createdAt,
       status: status,
+      isDragging: false,
     };
 
     TasksListStore.addTask(task);

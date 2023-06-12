@@ -16,9 +16,6 @@ type TaskTypes = {
 };
 
 const TaskList = ({ id, title, createdAt, status }: TaskTypes) => {
-  const taskDragRefStart = useRef("");
-  const taskDragOverRef = useRef("");
-
   const handleDeleteTask = (id: string) => {
     return TasksListStore.deleteTask(id);
   };
@@ -39,14 +36,19 @@ const TaskList = ({ id, title, createdAt, status }: TaskTypes) => {
     }
   };
 
+  // DRAG AND DROP
+
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
-    taskDragRefStart.current = id;
     console.log("start", id);
     return e;
   };
 
+  const handleDrag = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    console.log("drag", id);
+    return e;
+  };
+
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, id: string) => {
-    taskDragOverRef.current = id;
     console.log("enter", id);
     return e;
   };
@@ -56,17 +58,20 @@ const TaskList = ({ id, title, createdAt, status }: TaskTypes) => {
     return e;
   };
 
+  // DRAG AND DROP OVER
+
   return (
     <div
-      className={"flex items-start text-white mb-8"}
+      className={"flex items-start text-white mb-8 z-10 bg-red-500"}
       draggable
       onDragStart={(e) => handleDragStart(e, id)}
-      onDragEnter={(e) => handleDragEnter(e, id)}
-      onDragEnd={(e) => handleDragEnd(e, id)}
+      onDrag={(e) => handleDrag(e, id)}
+      // onDragEnter={(e) => handleDragEnter(e, id)}
+      // onDragEnd={(e) => handleDragEnd(e, id)}
     >
       <button
         type="button"
-        className="p-2 rounded-full bg-gray-900 mr-5 flex justify-center items-center mt-4"
+        className="rounded-full bg-gray-900 flex justify-center items-center w-[70px] h-[70px]"
         onClick={() => handleCompleteUnCompleteTask(id, status)}
       >
         {status === TASK_STATUS.INPROGRESS && (
@@ -91,7 +96,7 @@ const TaskList = ({ id, title, createdAt, status }: TaskTypes) => {
       <button
         type="button"
         onClick={() => handleDeleteTask(id)}
-        className="w-10 h-10 bg-red-600 mt-3 rounded-md flex justify-center items-center border border-red-700"
+        className="w-[40px] h-[40px] bg-red-600  rounded-md flex justify-center items-center border border-red-700"
       >
         <Image src={deleteIcon} alt="delete" className="w-6 h-6" />
       </button>
