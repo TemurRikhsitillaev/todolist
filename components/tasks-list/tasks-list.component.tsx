@@ -7,10 +7,18 @@ import { TASK_STATUS } from "@/store/tasks-list/tasks-status.store";
 import { Empty } from "../empty/empty.component";
 
 const TasksList = observer(() => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    console.log("drop: ", e.target);
+    return;
+  };
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    console.log(e);
-    return e;
+
+    console.log("drag over: ", e.target);
+    return;
   };
 
   const inProgressTasks = TasksListStore.tasksList.filter(
@@ -22,22 +30,25 @@ const TasksList = observer(() => {
   );
 
   return (
-    <main className="flex flex-col justify-start w-full h-[calc(100vh-80px)] p-10 text-white overflow-y-auto">
+    <main className="flex flex-wrap justify-start w-full h-[calc(100vh-80px)] p-10 text-white overflow-y-auto">
       {/* IN PROGRESS TASKS */}
-      <header className="mb-10">
-        <h1 className="text-white text-3xl bold">In Progress</h1>
-      </header>
-      {inProgressTasks.length > 0 ? (
-        inProgressTasks.map((task) => {
-          return <TaskList {...task} key={task.id} />;
-        })
-      ) : (
-        <Empty />
-      )}
+      <section className="w-max-content">
+        <header className="mb-10">
+          <h1 className="text-white text-3xl bold">In Progress</h1>
+        </header>
+        {inProgressTasks.length > 0 ? (
+          inProgressTasks.map((task) => {
+            return <TaskList {...task} key={task.id} />;
+          })
+        ) : (
+          <Empty />
+        )}
+      </section>
 
       {/* COMPLETED TASKS */}
       {completedTasks.length > 0 && (
         <section
+          onDrop={handleDrop}
           onDragOver={handleDragOver}
           className=" mb-10 border-t border-gray-700"
         >
